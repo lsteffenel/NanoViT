@@ -382,6 +382,9 @@ def main(args):
         classifier_dropout=args.classifier_dropout,
     )
 
+    if hasattr(model, "head") and model.head.out_features != args.nb_classes:
+        model.head = torch.nn.Linear(model.head.in_features, args.nb_classes, bias=False)
+
     #model = create_model(args.model, pretrained=False, num_classes=args.nb_classes)
     if args.finetune:
         checkpoint = torch.load(args.finetune, map_location="cpu",weights_only=False)
