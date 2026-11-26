@@ -15,8 +15,8 @@ def create_optimizer(args, model, skip_list=None, get_num_layer=None, get_layer_
         else:
             decay.append(p)
     groups = [
-        {"params": no_decay, "weight_decay": 0.0},
-        {"params": decay, "weight_decay": args.weight_decay},
+        {"params": no_decay, "weight_decay": 0.0, "lr_scale": 1.0},
+        {"params": decay, "weight_decay": args.weight_decay, "lr_scale": 1.0},
     ]
     betas = tuple(args.opt_betas) if args.opt_betas else (0.9, 0.999)
     opt = args.opt.lower()
