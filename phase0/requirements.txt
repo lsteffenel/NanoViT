@@ -1,0 +1,17 @@
+# Phase 0 - harnais de benchmark NanoViT (DGX Spark, GPU GB10)
+# Installer d'abord la build CUDA de torch, ex. :
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+torch
+torchvision
+timm>=1.0.0  # si ValueError posterize "bits must be between or equal to 1 and 8": pip install -U timm (sinon le shim dans datasets.py couvre)
+einops
+fvcore
+tensorboardX
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+imageio
+pillow
+tqdm

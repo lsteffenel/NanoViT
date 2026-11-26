@@ -1,0 +1,7 @@
+# Baselines Phase 0 (un modele par ligne, "#" = commentaire)
+MobileViTv4_XXS
+MobileViTv4_XS
+MobileViTv4_S
+MobileViTv4_flat_XXS
+MobileViTv4_linear_XXS
+MobileViTv4_linear_XS
