@@ -3,7 +3,7 @@
 #   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
 torch
 torchvision
-timm>=1.0.0
+timm>=1.0.0  # si ValueError posterize "bits must be between or equal to 1 and 8": pip install -U timm (sinon le shim dans datasets.py couvre)
 einops
 fvcore
 tensorboardX

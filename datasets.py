@@ -1,6 +1,15 @@
 import os
 from torchvision import datasets, transforms
 
+from PIL import ImageOps
+
+_posterize = ImageOps.posterize
+
+def _posterize_clamped(image, bits):
+    return _posterize(image, max(1, min(8, int(bits))))
+
+ImageOps.posterize = _posterize_clamped
+
 from timm.data.constants import \
     IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
 from timm.data import create_transform
