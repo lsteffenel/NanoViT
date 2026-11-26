@@ -13,21 +13,30 @@ from timm.data.mixup import Mixup
 from timm.models import create_model
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from timm.utils import ModelEma
-from optim_factory import create_optimizer
+try:
+    from optim_factory import create_optimizer
+except ImportError:
+    from timm.optim import create_optimizer
 
 from datasets import build_dataset
 from engine import train_one_epoch, evaluate
 
 from utils import NativeScalerWithGradNormCount as NativeScaler
 import utils
-import models.model
+import models.nanovit
 
 from timm import models
 
 from sampler import MultiScaleSamplerDDP
-from fvcore.nn import FlopCountAnalysis
+try:
+    from fvcore.nn import FlopCountAnalysis
+except ImportError:
+    FlopCountAnalysis = None
 
-from lmodels import *
+try:
+    from lmodels import *
+except ImportError:
+    pass
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -489,8 +498,7 @@ def main(args):
         input_res = (3, args.input_size, args.input_size)
         input = torch.ones(()).new_empty((1, *input_res), dtype=next(model.parameters()).dtype,
                                         device=next(model.parameters()).device)
-        flops = FlopCountAnalysis(model, input)
-        model_flops = flops.total()
+        model_flops = FlopCountAnalysis(model, input).total() if FlopCountAnalysis is not None else float('nan')
         print('[REAL] number of params after reparameterization:', n_parameters)
         print(f"[REAL] MAdds after reparameterization: {round(model_flops * 1e-6, 2)} M")
 
@@ -519,8 +527,7 @@ def main(args):
     input_res = (3, args.input_size, args.input_size)
     input = torch.ones(()).new_empty((1, *input_res), dtype=next(model.parameters()).dtype,
                                      device=next(model.parameters()).device)
-    flops = FlopCountAnalysis(model, input)
-    model_flops = flops.total()
+    model_flops = FlopCountAnalysis(model, input).total() if FlopCountAnalysis is not None else float('nan')
     print(f"Total Trainable Params: {round(total_params * 1e-6, 2)} M")
     print(f"MAdds: {round(model_flops * 1e-6, 2)} M")
 
@@ -530,8 +537,7 @@ def main(args):
         input_res = (3, args.input_size, args.input_size)
         input = torch.ones(()).new_empty((1, *input_res), dtype=next(model_with_reparam.parameters()).dtype,
                                         device=next(model_with_reparam.parameters()).device)
-        flops = FlopCountAnalysis(model_with_reparam, input)
-        model_flops = flops.total()
+        model_flops = FlopCountAnalysis(model_with_reparam, input).total() if FlopCountAnalysis is not None else float('nan')
         print(f"Total Params After ReParam: {round(total_params * 1e-6, 2)} M")
         print(f"MAdds After ReParam: {round(model_flops * 1e-6, 2)} M")
 

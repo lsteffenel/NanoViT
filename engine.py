@@ -9,7 +9,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-from lmodels import lutils
+try:
+    from lmodels import lutils
+except ImportError:
+    lutils = None
 
 
 def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
@@ -178,6 +181,8 @@ def evaluate(data_loader, model, device, use_amp=False):
 
 @torch.no_grad()
 def evaluate_vizualisation(data_loader, model, device, use_amp=False):
+    if lutils is None:
+        raise ImportError("lmodels is required for --eval_vizu")
     criterion = torch.nn.CrossEntropyLoss()
 
     metric_logger = utils.MetricLogger(delimiter="  ")
